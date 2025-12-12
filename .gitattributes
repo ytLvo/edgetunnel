@@ -1,0 +1,2 @@
+# 保持本地 wrangler.toml，不接收上游更新
+wrangler.toml merge=ours
