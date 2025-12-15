@@ -1,0 +1,39 @@
+name: Patch wrangler.toml before deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Patch wrangler.toml if KV missing
+        run: |
+          if grep -q '\[\[kv_namespaces\]\]' wrangler.toml || grep -q 'env.production.kv_namespaces' wrangler.toml; then
+            echo "KV already present, skip patch"
+            exit 0
+          fi
+
+          echo "Patching wrangler.toml..."
+
+          cat <<EOF >> wrangler.toml
+
+[env.production]
+[[env.production.kv_namespaces]]
+binding = "KV"
+id = "KV"
+preview_id = "bdd88fcda76e4c0dabf5e8cace5a35c1"
+EOF
+
+      - name: Upload patched artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: patched-source
+          path: .
