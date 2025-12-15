@@ -25,10 +25,9 @@ jobs:
 
           cat <<EOF >> wrangler.toml
 
-[[kv_namespaces]]
+
 binding = "KV"
-id = "KV"
-preview_id = "bdd88fcda76e4c0dabf5e8cace5a35c1"
+id = "bdd88fcda76e4c0dabf5e8cace5a35c1"
 EOF
 
       - name: Upload patched artifact
